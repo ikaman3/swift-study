@@ -414,4 +414,353 @@ print("Game over!")
 
 // Conditional Statements
 // If
+let temperatureInCelsius = 25
+let weatherAdvice: String
+if temperatureInCelsius <= 0 {
+    weatherAdvice = "It's very cold. Consider wearing a scarf."
+} else if temperatureInCelsius >= 30 {
+    weatherAdvice = "It's really warm. Don't forget to wear sunscreen."
+} else {
+    weatherAdvice = "It's not that cold. Wear a T-shirt."
+}
+print(weatherAdvice)
+//let freezeWarning: String? = if temperatureInCelsius <= 0 {
+//    "It's below freezing. Watch for ice!"
+//} else {
+//    nil
+//}
+// Switch
+let someCharacter: Character = "z"
+switch someCharacter {
+case "a":
+    print("The first letter of the Latin alphabet")
+case "z":
+    print("The last letter of the Latin alphabet")
+default:
+    print("Some other character")
+}
+// No Implicit Fallthrough, 실행 가능한 구문이 없으면 컴파일 에러
+let anotherCharacter: Character = "a"
+switch anotherCharacter {
+case "a", "A":
+    print("The letter A")
+default:
+    print("Not the letter A")
+}
+// Interval Matching
+let approximateCount = 62
+let countedThings = "moons orbiting Saturn"
+let naturalCount: String
+switch approximateCount {
+case 0:
+    naturalCount = "no"
+case 1..<5:
+    naturalCount = "a few"
+case 5..<12:
+    naturalCount = "several"
+case 12..<100:
+    naturalCount = "dozens of"
+case 100..<1000:
+    naturalCount = "hundreds of"
+default:
+    naturalCount = "many"
+}
+print("There are \(naturalCount) \(countedThings).")
+// Tuples 첫번째 일치하는 케이스 사용
+let somePoint = (0, 0)
+switch somePoint {
+case (0, 0):
+    print("\(somePoint) is at the origin")
+case (_, 0):
+    print("\(somePoint) is on the x-axis")
+case (0, _):
+    print("\(somePoint) is on the y-axis")
+case (-2...2, -2...2):
+    print("\(somePoint) is inside the box")
+default:
+    print("\(somePoint) is outside of the box")
+}
+// Value Bindings
+let anotherPoint = (2, 0)
+switch anotherPoint {
+case (let x, 0):
+    print("on the x-axis with an x value of \(x)")
+case (0, let y):
+    print("on the y-axis with a y value of \(y)")
+case let (x, y): // anotherPoint의 모든 케이스와 일치하여 default가 필요없음
+    print("somewhere else at (\(x), \(y))")
+}
+// Where
+let yetAnotherPoint = (1, -1)
+switch yetAnotherPoint {
+case let (x, y) where x == y:
+    print("(\(x), \(y)) is ob the line x == y")
+case let (x, y) where x == -y:
+    print("(\(x), \(y)) is ob the line x == -y")
+case let (x, y):
+    print("(\(x), \(y)) isjust some arbitrary point")
+}
+// Compound Cases
+//let someCharacter: Character = "e"
+switch someCharacter {
+case "a", "e", "i", "o", "u":
+    print("\(someCharacter) is a vowel")
+case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",
+    "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":
+    print("\(someCharacter) is a consonant")
+default:
+    print("\(someCharacter) is not a vowel or a consonant")
+}
+let stillAnotherPoint = (9, 0)
+switch stillAnotherPoint {
+case (let distance , 0), (0, let distance):
+    print("On an axis, \(distance) from the origin")
+default:
+    print("Not on an axis")
+}
+// Control Transfer Statements
+// continue
+let puzzleInput = "great minds think alike"
+var puzzleOutput = ""
+let charactersToRemove: [Character] = ["a", "e", "i", "o", "u", " "]
+for character in puzzleInput {
+    if charactersToRemove.contains(character) {
+        continue
+    }
+    puzzleOutput.append(character)
+}
+print(puzzleOutput)
+// Break(loop의 break는 같음)
+// Break in a Switch Statement
+let numberSymbol: Character = "三"
+var possibleIntegerValue: Int?
+switch numberSymbol {
+case "1", "١", "一", "๑":
+    possibleIntegerValue = 1
+case "2", "٢", "二", "๒":
+    possibleIntegerValue = 2
+case "3", "٣", "三", "๓":
+    possibleIntegerValue = 3
+case "4", "٤", "四", "๔":
+    possibleIntegerValue = 4
+default:
+    break
+}
+if let integerValue = possibleIntegerValue {
+    print("The integer value of \(numberSymbol) is \(integerValue).")
+} else {
+    print("An integer value could not be found for \(numberSymbol).")
+}
+// Fallthrough
+let integerToDescribe = 2
+var description = "The number \(integerToDescribe) is"
+switch integerToDescribe {
+case 2, 3, 5, 7, 11, 13, 17, 19:
+    description += " a prime number, and also"
+    fallthrough
+default:
+    description += " an integer."
+}
+print(description)
+// Labeled Statements
+//let finalSquare = 25
+//var board = [Int](repeating: 0, count: finalSquare + 1)
+//board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02
+//board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08
+square = 0
+diceRoll = 0
+gameLoop: while square != finalSquare {
+    diceRoll += 1
+    if diceRoll == 7 { diceRoll = 1 }
+    switch square + diceRoll {
+    case finalSquare:
+        // diceRoll will move us to the final square, so the game is over
+        break gameLoop // 라벨이 없었다면 switch 문이 종료됨
+    case let newSquare where newSquare > finalSquare:
+        // diceRoll will move us beyond the final square, so roll again
+        continue gameLoop // 라벨없어도 괜찮음
+    default:
+        // this is a valid move, so find out its effect
+        square += diceRoll
+        square += board[square]
+    }
+}
+print("Game over!")
+// Early Exit
+func greet(person: [String: String]) {
+    guard let name = person["name"] else {
+        return
+    }
+    print("Hell \(name)")
+    guard let location = person["location"] else {
+        print("I hope the weather is nice near you.")
+        return
+    }
+    print("I hope the weather is nice in \(location).")
+}
+greet(person: ["name": "John"])
+greet(person: ["name": "Jane", "location": "C"])
+// Deferred Actions
+var score = 1
+if score < 10 {
+    defer {
+        print(score)
+    }
+    score += 5
+}
+score = 3
+if score < 100 {
+    score += 100
+    defer {
+        score -= 100
+    }
+    print(score)
+}
+print(score)
+if score < 10 {
+    defer {
+        print(score)
+    }
+    defer {
+        print("The score is:")
+    }
+    score +=  5
+}
+// Checking API Availability
+if #available(iOS 10, macOS 10.12, *) {
+    // Use iOS 10 APIs on iOS, and use macOS 10.12 APIs on macOS
+} else {
+    // Fall back to earlier iOS and macOS APIs
+}
 
+@available(macOS 10.12, *)
+struct ColorPreference {
+    var bestColor = "blue"
+}
+func chooseBestColor() -> String {
+    guard #available(macOS 10.12, *) else {
+        return "gray"
+    }
+    let colors = ColorPreference()
+    return colors.bestColor
+}
+print(chooseBestColor())
+if #available(iOS 10, *) {
+} else {
+    // Fallback code
+}
+
+if #unavailable(iOS 10) {
+    // Fallback code
+}
+
+// Functions
+func greet1(person: String) -> String {
+    let greeting = "Hello, " + person + "!"
+    return greeting
+}
+// Defining and Calling Functions
+func greetAgain(person: String) -> String {
+    return "Hello agian, " + person + "!"
+}
+print(greetAgain(person: "Anna"))
+// Function Parameters and Return Values
+// Functions Without Parameters
+func sayHelloWorld() -> String {
+    return "hello, world"
+}
+print(sayHelloWorld())
+// Functions With Multiple Parameters
+func greet2(person: String, alreadyGreeted: Bool) -> String {
+    if alreadyGreeted {
+        return greetAgain(person: person)
+    } else {
+        return greet1(person: person)
+    }
+}
+print(greet2(person: "Tim", alreadyGreeted: true))
+// Functions Without Return Values
+func greet(person: String) { // Void(()로 쓰여진 빈 튜플) 타입을 리턴함.
+    print("Hello, \(person)!")
+}
+func printAndCount(string: String) -> Int {
+    print(string)
+    return string.count
+}
+func printWithoutCounting(string: String) {
+    let _ = printAndCount(string: string)
+}
+printAndCount(string: "Hell, World!")
+printWithoutCounting(string: "Hell, World!")
+// FUnctions with Multiple Return Values
+//func minMax(array: [Int]) -> (min: Int, max: Int) {
+//    var currentMin = array[0]
+//    var currentMax = array[0]
+//    for value in array[1..<array.count] {
+//        if value < currentMin {
+//            currentMin = value
+//        } else if value > currentMax {
+//            currentMax = value
+//        }
+//    }
+//    return (currentMin, currentMax)
+//}
+//let bounds = minMax(array: [8, -6, 2, 109, 3, 71])
+//print("min is \(bounds.min) and max is \(bounds.max)")
+// Optional Tuple Return Types
+func minMax(array: [Int]) -> (min: Int, max: Int)? {
+    if array.isEmpty { return nil }
+    var currentMin = array[0]
+    var currentMax = array[0]
+    for value in array[1..<array.count] {
+        if value < currentMin {
+            currentMin = value
+        } else if value > currentMax {
+            currentMax = value
+        }
+    }
+    return (currentMin, currentMax)
+}
+if let bounds = minMax(array: [8, -6, 2, 109, 3, 71]) {
+    print("min is \(bounds.min) and max is \(bounds.max)")
+}
+// Functions With an Implicit Return
+// 함수 전체 본문이 한줄로 표현된다면 암시적으로 반환할 수 있다.
+func greeting(for person: String) -> String {
+    "Hell, " + person + "!"
+}
+print(greeting(for: "Dave"))
+func anotherGreeting(for person: String) -> String {
+    return "Hell, " + person + "!"
+}
+print(anotherGreeting(for: "Dave"))
+// Function Argument Labels and Parameter Names
+// Specifying Argument Labels
+func greet(person: String, from hometown: String) -> String {
+    return "Hello \(person)!  Glad you could visit from \(hometown)."
+}
+print(greet(person: "Bill", from: "Cupertino"))
+// Omitting Argument Labels
+func someFunction(_ firstParameterName: Int, secondParameterName: Int) {
+    // In the function body, firstParameterName and secondParameterName
+    // refer to the argument values for the first and second parameters.
+}
+someFunction(1, secondParameterName: 2)
+// Default Parameter Values
+func someFunction(parameterWithoutDefault: Int, parameterWithDefault: Int = 12) {
+    // If you omit the second argument when calling this function, then
+    // the value of parameterWithDefault is 12 inside the function body.
+}
+someFunction(parameterWithoutDefault: 3, parameterWithDefault: 6) // parameterWithDefault is 6
+someFunction(parameterWithoutDefault: 4) // parameterWithDefault is 12
+// Variadic Parameters
+func arithmeticMean(_ numbers: Double...) -> Double {
+    var total: Double = 0
+    for number in numbers {
+        total += number
+    }
+    return total / Double(numbers.count)
+}
+arithmeticMean(1, 2, 3, 4)
+arithmeticMean(1, 2, 3, 4, 8.35, 75.2313123, 3131)
+// In-Out Parameters
