@@ -764,4 +764,98 @@ func arithmeticMean(_ numbers: Double...) -> Double {
 arithmeticMean(1, 2, 3, 4)
 arithmeticMean(1, 2, 3, 4, 8.35, 75.2313123, 3131)
 // In-Out Parameters
+func swapTwoInts(_ a: inout Int, _ b: inout Int) {
+    let temporaryA = a
+    a = b
+    b = temporaryA
+}
+var someInt = 3
+var anotherInt = 107
+swapTwoInts(&someInt, &anotherInt)
+print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
+// Function Types
+// 이 두 함수의 타입은 (Int, Int) -> Int => “함수는 모두 Int 타입인 2개의 파라미터를 가지며 Int 타입을 반환합니다.”
+func addTwoInts(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+func multiplyTwoInts(_ a: Int, _ b: Int) -> Int {
+    return a * b
+}
+func printHellWorld() { // () -> Void
+    print("Hell, World!")
+}
+// Using Function Types
+// “2개의 Int 값과 Int 를 반환하는 함수’ 의 타입을 가지는 mathFunction 이라는 변수를 정의합니다. addTwoInts 라는 함수를 참조하기 위해 새로운 변수에 설정 하십시오.”
+var mathFuncion: (Int, Int) -> Int = addTwoInts
+print("Result: \(mathFuncion(2, 3))")
+mathFuncion = multiplyTwoInts
+print("Result: \(mathFuncion(2, 3))")
+let anotherMathFunction = addTwoInts // Type inference 가능
+// Function Types as Parameter Types
+func printMathResult(_ mathFunction: (Int, Int) -> Int, _ a: Int, _ b: Int) {
+    print("Result: \(mathFunction(a, b))")
+}
+printMathResult(addTwoInts, 3, 5)
+// Function Types as Return Types
+/*
+func stepForward(_ input: Int) -> Int {
+    return input + 1
+}
+func stepBackward(_ input: Int) -> Int {
+    return input - 1
+}
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+    return backward ? stepBackward : stepForward
+}
+var currentValue = 3
+let moveNearerToZero = chooseStepFunction(backward: currentValue > 0)
+print("Counting to zero: ")
+while currentValue != 0 {
+    print("\(currentValue)...")
+    currentValue = moveNearerToZero(currentValue)
+}
+print("Zero!")
+*/
+// Nested Functions
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+    func stepForward(input: Int) -> Int { return input + 1 }
+    func stepBackward(input: Int) -> Int { return input - 1 }
+    return backward ? stepBackward : stepForward
+}
+var currentValue = -4
+let moveNearerToZero = chooseStepFunction(backward: currentValue > 0)
+while currentValue != 0 {
+    print("\(currentValue)...")
+    currentValue = moveNearerToZero(currentValue)
+}
+print("Zero!")
 
+// Clousures
+// The Sorted Method
+func backward(_ s1: String, _ s2: String) -> Bool {
+    return s1 > s2
+}
+var reversedNames = names.sorted(by: backward)
+print(reversedNames)
+// Closure Expression Syntax
+reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in return s1 > s2 })
+// Inferring Type From Context
+reversedNames = names.sorted(by: { s1, s2 in return s1 > s2 })
+// Implicit Returns from Single-Expression Closures
+reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
+// Shorthand Argument Names
+reversedNames = names.sorted(by: { $0 > $1 })
+// Operator Methods
+reversedNames = names.sorted(by: >)
+// Trailing Closures
+func someFunctionThatTakesAClosure(closure: () -> Void) {
+    // function body goes here
+}
+someFunctionThatTakesAClosure(closure: {
+    // closure's body goes here
+})
+someFunctionThatTakesAClosure() {
+    // trailing closure's body goes here
+}
+reversedNames = names.sorted() { $0 > $1 }
+reversedNames = names.sorted { $0 > $1 }
