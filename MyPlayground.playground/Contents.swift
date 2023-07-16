@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 var greeting = "Hell, playground"
 var x: Int = 4
@@ -859,3 +860,288 @@ someFunctionThatTakesAClosure() {
 }
 reversedNames = names.sorted() { $0 > $1 }
 reversedNames = names.sorted { $0 > $1 }
+let digitNames = [
+    0: "Zero", 1: "One", 2: "Two",   3: "Three", 4: "Four",
+    5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"
+]
+let numbers = [16, 58, 510]
+let strings = numbers.map { (number) -> String in
+    var number = number
+    var output = ""
+    repeat {
+        output = digitNames[number % 10]! + output
+        number /= 10
+    } while number > 0
+    return output
+}
+/*
+func loadPicture(from server: Server, completion: (Picture) -> Void, onFailure: () -> Void) {
+    if let picture = download("photo.jpg", from: server) {
+        completion(picture)
+    } else {
+        onFailure()
+    }
+}
+loadPicture(from: someServer) { picture in
+    someView.currentPicture = picture
+} onFailure: {
+    print("Couldn't download the next picture.")
+}
+*/
+// Capturing Values
+func makeIncrementer(forIncrement amount: Int) -> () -> Int {
+    var runningTotal = 0
+    func incrementer() -> Int {
+        runningTotal += amount
+        return runningTotal
+    }
+    return incrementer
+}
+let incrementByTen = makeIncrementer(forIncrement: 10)
+print(incrementByTen(), incrementByTen(), incrementByTen(), incrementByTen())
+let incrementBySeven = makeIncrementer(forIncrement: 7)
+print(incrementBySeven(), incrementBySeven(), incrementBySeven(), incrementBySeven())
+// Closures Are Reference Types
+let alsoIncrementByTen = incrementByTen
+print(alsoIncrementByTen())
+// Escaping Closures
+var completionHandlers: [() -> Void] = []
+func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {
+    completionHandlers.append(completionHandler)
+}
+func someFunctionWithNonescapingClosure(closure: () -> Void) {
+    closure()
+}
+class SomeClass {
+    var x = 10
+    func doSomething() {
+        someFunctionWithEscapingClosure { self.x = 100 }
+        someFunctionWithNonescapingClosure { x = 200 }
+    }
+}
+let instance = SomeClass()
+instance.doSomething()
+print(instance.x)
+completionHandlers.first?()
+print(instance.x)
+class SomeOtherClass {
+    var x = 10
+    func doSomething() {
+        someFunctionWithEscapingClosure { [self] in x = 100 }
+        someFunctionWithNonescapingClosure { x = 200 }
+    }
+}
+// Autoclosures
+var customersInLine = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
+print(customersInLine.count)
+let customerProvider = { customersInLine.remove(at: 0) }
+print(customersInLine.count)
+print("Now serving \(customerProvider())!")
+print(customersInLine.count)
+func serve(customer customerProvider: () -> String) {
+    print("Now serving \(customerProvider())!")
+}
+serve(customer: { customersInLine.remove(at: 0) })
+func serve(customer customerProvider: @autoclosure () -> String) {
+    print("Now serving \(customerProvider())!")
+}
+serve(customer: customersInLine.remove(at: 0))
+var customerProviders: [() -> String] = []
+func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> String) {
+    customerProviders.append(customerProvider)
+}
+collectCustomerProviders(customersInLine.remove(at: 0))
+collectCustomerProviders(customersInLine.remove(at: 0))
+
+print("Collected \(customerProviders.count) closures.")
+// Prints "Collected 2 closures."
+for customerProvider in customerProviders {
+    print("Now serving \(customerProvider())!")
+}
+
+// Enumerations
+// Enumeration Syntax
+enum CompassPoint {
+    case north
+    case south
+    case east
+    case west
+}
+enum Planet {
+    case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
+}
+var directionToHead = CompassPoint.west
+directionToHead = .north
+// Matching Enumeration Values with a Switch Statement
+directionToHead = .south
+switch directionToHead {
+case .north:
+    print("Lots of planets have a north")
+case .south:
+    print("Watch out for penguins")
+case .east:
+    print("Where the sun rises")
+case .west:
+    print("Where the skies are blue")
+}
+let somePlanet = Planet.earth
+switch somePlanet {
+case .earth:
+    print("Mostly harmless")
+default:
+    print("Not a safe place for humans")
+}
+// Iterating over Enumeration Cases
+enum Beverage: CaseIterable {
+    case coffee, tea, juice
+}
+let numberOfChoices = Beverage.allCases.count
+print("\(numberOfChoices) beverages available")
+for beverage in Beverage.allCases {
+    print(beverage)
+}
+// Associated Values
+enum Barcode {
+    case upc(Int, Int, Int, Int)
+    case qrCode(String)
+}
+var productBarcode = Barcode.upc(8, 85909, 51226, 3)
+productBarcode = .qrCode("ABCASDSADA")
+switch productBarcode {
+case .upc(let numberSystem, let manufacturer, let product, let check):
+    print("UPC: \(numberSystem), \(manufacturer), \(product), \(check).")
+case .qrCode(let productCode):
+    print("QR code: \(productCode).")
+}
+switch productBarcode {
+case let .upc(numberSystem, manufacturer, product, check):
+    print("UPC : \(numberSystem), \(manufacturer), \(product), \(check).")
+case let .qrCode(productCode):
+    print("QR code: \(productCode).")
+}
+// Raw Values
+enum ASCIIControlCharacter: Character {
+    case tab = "\t"
+    case lineFeed = "\n"
+    case carriageReturn = "\r"
+}
+// Implicitly Assigned Raw Values
+enum intPlanet: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune
+}
+enum stringCompassPoint: String {
+    case north, south, east, west
+}
+let earthsOrder = intPlanet.earth.rawValue
+let sunsetDirection = stringCompassPoint.north.rawValue
+// Initializing from a Raw Value
+let possiblePlanet = intPlanet(rawValue: 7)
+print(type(of: possiblePlanet))
+let positionToFind = 11
+if let somePlanet = intPlanet(rawValue: positionToFind) {
+    switch somePlanet {
+    case .earth:
+        print("Mostly harmless")
+    default:
+        print("Not a safe place for humans")
+    }
+} else {
+    print("There isn't a planet at position \(positionToFind)")
+}
+// Recursive Enumerations
+enum ArithmeticExpression {
+    case number(Int)
+    indirect case addition(ArithmeticExpression, ArithmeticExpression)
+    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+let five = ArithmeticExpression.number(5)
+let four = ArithmeticExpression.number(4)
+let sum = ArithmeticExpression.addition(five, four)
+let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
+func evaluate(_ expression: ArithmeticExpression) -> Int {
+    switch expression {
+    case let .number(value):
+        return value
+    case let .addition(left, right):
+        return evaluate(left) + evaluate(right)
+    case let .multiplication(left, right):
+        return evaluate(left) * evaluate(right)
+    }
+}
+print(evaluate(product))
+
+// Structures and Classes
+// Definition Syntax
+struct Resolution {
+    var width = 0
+    var height = 0
+}
+class VideoMode {
+    var resolution = Resolution()
+    var interlaced = false
+    var frameRate = 0.0
+    var name: String?
+}
+// Structure and Class Instances
+let someResolution = Resolution()
+let someVideoMode = VideoMode()
+// Accessing Properties
+print("The width of someResolution is \(someResolution.width)")
+print("The width of someVideoMode is \(someVideoMode.resolution.width)")
+someVideoMode.resolution.width = 1280
+print("The width of someVideoMode is \(someVideoMode.resolution.width)")
+// Memberwise Initializers for Structure Types
+let vga = Resolution(width: 640, height: 480) // 클래스 인스턴스는 멤버별 초기화를 받지 않음
+// Strictures and Enumerations Are Value Types
+let hd = Resolution(width: 1920, height: 1080)
+var cinema = hd
+cinema.width = 2048
+print("cinema is now \(cinema.width) pixels wide")
+print("hd is still \(hd.width) pixels wide")
+enum anotherCompassPoint {
+    case north, south, east, west
+    mutating func turnNorth() {
+        self = .north
+    }
+}
+var currentDirection = anotherCompassPoint.south
+let rememberedDirection = currentDirection
+currentDirection.turnNorth()
+print("The current direction is \(currentDirection)")
+print("The remembered direction is \(rememberedDirection)")
+// Classes Are Reference Types
+let tenEighty = VideoMode()
+tenEighty.resolution = hd
+tenEighty.interlaced = true
+tenEighty.name = "1080i"
+tenEighty.frameRate = 25.0
+let alsoTenEighty = tenEighty
+alsoTenEighty.frameRate = 30.0
+print("The frameRate property of tenEighty is now \(tenEighty.frameRate)")
+// Identity Operators
+if tenEighty === alsoTenEighty {
+    print("tenEighty and alsoTenEighty refer to the same VideoMode instance.")
+}
+// Properties
+// Stored Properties
+struct FixedLengthRange {
+    var firstValue: Int
+    let length: Int
+}
+var rangeOfThreeItems = FixedLengthRange(firstValue: 0, length: 3)
+rangeOfThreeItems.firstValue = 6
+// Stored Properties of Constant Structure Instances
+let rangeOfFourItems = FixedLengthRange(firstValue: 0, length: 4)
+//rangeOfFourItems.firstValue = 6
+// Lazy Stored Properties
+class DataImporter {
+    var filename = "data.txt"
+}
+class DataManager {
+    lazy var importer = DataImporter()
+    var data = [String]()
+}
+let manager = DataManager()
+manager.data.append("Some data")
+manager.data.append("Some more data")
+print(manager.importer.filename)
