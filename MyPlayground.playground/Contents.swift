@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+/*
 var greeting = "Hell, playground"
 var x: Int = 4
 //x = 5.131
@@ -1122,6 +1123,7 @@ print("The frameRate property of tenEighty is now \(tenEighty.frameRate)")
 if tenEighty === alsoTenEighty {
     print("tenEighty and alsoTenEighty refer to the same VideoMode instance.")
 }
+ */
 // Properties
 // Stored Properties
 struct FixedLengthRange {
@@ -1145,3 +1147,118 @@ let manager = DataManager()
 manager.data.append("Some data")
 manager.data.append("Some more data")
 print(manager.importer.filename)
+// Stored Properties and Instance Variables
+// Computed Properties
+struct Point {
+    var x = 0.0, y = 0.0
+}
+struct Size {
+    var width = 0.0, height = 0.0
+}
+struct Rect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            let centerX = origin.x + (size.width / 2)
+            let centerY = origin.y + (size.height / 2)
+            return Point(x: centerX, y: centerY)
+        }
+        set(newCenter) {
+            origin.x = newCenter.x - (size.width / 2)
+            origin.y = newCenter.y - (size.height / 2)
+        }
+    }
+}
+var square = Rect(origin: Point(x: 0.0, y: 0.0),
+                  size: Size(width: 10.0, height: 10.0))
+let initalSquareCenter = square.center
+print(initalSquareCenter)
+square.center = Point(x: 15.0, y: 15.0)
+print("square.origin is now at (\(square.origin.x), \(square.origin.y))")
+// Shorthand Setter Declaration
+struct AlternativeRect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            let centerX = origin.x + (size.width / 2)
+            let centerY = origin.y + (size.height / 2)
+            return Point(x: centerX, y: centerY)
+        }
+        set {
+            origin.x = newValue.x - (size.width / 2)
+            origin.y = newValue.y - (size.height / 2)
+        }
+    }
+}
+// Shorthand Getter Declaration
+struct CompactRect {
+    var origin = Point()
+    var size = Size()
+    var center: Point {
+        get {
+            Point(x: origin.x + (size.width / 2),
+                  y: origin.y + (size.height / 2))
+        }
+        set {
+            origin.x = newValue.x - (size.width / 2)
+            origin.y = newValue.y - (size.height / 2)
+        }
+    }
+}
+// Read-Only Computed Properties: setter를 생략하면 된다.
+struct Cuboid {
+    var width = 0.0, height = 0.0, depth = 0.0
+    var volume: Double { width * height * depth } // 암시적 return을 사용한 Read-Only Computed Property
+}
+let fourByFiveByTwo = Cuboid(width: 4.0, height: 5.0, depth: 2.0)
+print(fourByFiveByTwo.volume)
+// Property Observers
+class StepCounter {
+    var totalSteps: Int = 0 {
+        willSet(newTotalSteps) {
+            print("About to set totalSteps to \(newTotalSteps)")
+        }
+        didSet {
+            if totalSteps > oldValue {
+                print("Added \(totalSteps - oldValue) steps")
+            }
+        }
+    }
+}
+let stepCounter = StepCounter()
+stepCounter.totalSteps = 200
+stepCounter.totalSteps = 360
+stepCounter.totalSteps = 3200
+// Property Wrappers
+@propertyWrapper
+struct TwelveOrLess {
+    private var number = 0
+    var wrappedValue: Int {
+        get { number }
+        set { number = min(newValue, 12) }
+    }
+}
+struct SmallRectangle {
+    @TwelveOrLess var height: Int
+    @TwelveOrLess var width: Int
+}
+var rectangle = SmallRectangle()
+print(rectangle.height)
+rectangle.height = 11
+print(rectangle.height)
+rectangle.height = 1231123
+print(rectangle.height)
+struct OtherSmallRectangle {
+    private var _width = TwelveOrLess()
+    private var _height = TwelveOrLess()
+    var height: Int {
+        get { _height.wrappedValue }
+        set { _height.wrappedValue = newValue }
+    }
+    var width: Int {
+        get { _width.wrappedValue }
+        set { _width.wrappedValue = newValue}
+    }
+}
