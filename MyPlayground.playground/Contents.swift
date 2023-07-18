@@ -1123,7 +1123,7 @@ print("The frameRate property of tenEighty is now \(tenEighty.frameRate)")
 if tenEighty === alsoTenEighty {
     print("tenEighty and alsoTenEighty refer to the same VideoMode instance.")
 }
- */
+
 // Properties
 // Stored Properties
 struct FixedLengthRange {
@@ -1262,3 +1262,167 @@ struct OtherSmallRectangle {
         set { _width.wrappedValue = newValue}
     }
 }
+// Setting Inital Values for Wrapped Properties
+@propertyWrapper
+struct SmallNumber {
+    private var maximum: Int
+    private var number: Int
+    var wrappedValue: Int {
+        get { number }
+        set { number = min(newValue, maximum) }
+    }
+    init() {
+        maximum = 12
+        number = 0
+    }
+    init(wrappedValue: Int) {
+        maximum = 12
+        number = min(wrappedValue, maximum)
+    }
+    init(wrappedValue: Int, maximum: Int) {
+        self.maximum = maximum
+        number = min(wrappedValue, maximum)
+    }
+}
+struct ZeroRectangle {
+    @SmallNumber var height: Int
+    @SmallNumber var width: Int
+}
+var zeroRectangle = ZeroRectangle()
+print(zeroRectangle.height, zeroRectangle.width)
+struct UnitRectangle {
+    @SmallNumber var height: Int = 1
+    @SmallNumber var width: Int = 1
+}
+var unitRectangle = UnitRectangle()
+print(unitRectangle.height, unitRectangle.width)
+struct NarrowRectangle {
+    @SmallNumber(wrappedValue: 2, maximum: 5) var height: Int
+    @SmallNumber(wrappedValue: 3, maximum: 4) var width: Int
+}
+var narrowRectangle = NarrowRectangle()
+print(narrowRectangle.height, narrowRectangle.width)
+narrowRectangle.height = 100
+narrowRectangle.width = 100
+print(narrowRectangle.height, narrowRectangle.width)
+struct MixedRectangle {
+    @SmallNumber var height: Int = 1
+    @SmallNumber(maximum: 9) var width: Int = 2
+}
+var mixedRectangle = MixedRectangle()
+print(mixedRectangle.height)
+mixedRectangle.width = 20
+mixedRectangle.height = 20
+print(mixedRectangle.width)
+print(mixedRectangle.height)
+// Projecting a Value From a Property Wrapper
+@propertyWrapper
+struct SmallNumber {
+    private var number: Int
+    private(set) var projectedValue: Bool
+    var wrappedValue: Int {
+        get { number }
+        set {
+            if newValue > 12 {
+                number = 12
+                projectedValue = true
+            } else {
+                number = newValue
+                projectedValue = false
+            }
+        }
+    }
+    init() {
+        self.number = 0
+        self.projectedValue = false
+    }
+}
+struct SomeStructure {
+    @SmallNumber var someNumber: Int
+}
+var someStructure = SomeStructure()
+someStructure.someNumber = 4
+print(someStructure.$someNumber)
+someStructure.someNumber = 55
+print(someStructure.$someNumber)
+
+enum Size {
+    case small, large
+}
+struct SizedRectangle {
+    @SmallNumber var height: Int
+    @SmallNumber var width: Int
+    mutating func resize(to size: Size) -> Bool {
+        switch size {
+        case .small:
+            height = 10
+            width = 20
+        case .large:
+            height = 100
+            width = 100
+        }
+        return $height || $width
+    }
+}
+var s1 = SizedRectangle()
+print(s1.width, s1.height)
+print(s1.resize(to: .small))
+print(s1.width, s1.height)
+print(s1.resize(to: .large))
+print(s1.width, s1.height)
+//Global and Local Variables
+func someFunction() {
+    @SmallNumber var myNumber: Int
+    myNumber = 10
+    print(myNumber)
+    print($myNumber)
+    myNumber = 24
+    print(myNumber)
+    print($myNumber)
+}
+someFunction()
+// Type Properties
+// Type Propertiy Syntax
+struct otherStructure {
+    static var storedTypeProperty = "Some value."
+    static var computedTypeProperty: Int { 1 }
+}
+enum SomeEnumeration {
+    static var storedTypeProperty = "Some value."
+    static var computedTypeProperty: Int { 6 }
+}
+class SomeClass {
+    static var storedTypeProperty = "Some value."
+    static var computedTypeProperty: Int { 27 }
+    class var overrideableComputedTypeProperty: Int { 107 }
+}
+print(otherStructure.storedTypeProperty)
+otherStructure.storedTypeProperty = "Another value."
+print(otherStructure.storedTypeProperty)
+print(SomeEnumeration.computedTypeProperty)
+print(SomeClass.computedTypeProperty)
+// Querying and Setting Type Properties
+struct AudioChannel {
+    static let thresholdLevel = 10
+    static var maxInputLevelForAllChannels = 0
+    var currentLevel: Int = 0 {
+        didSet {
+            if currentLevel > AudioChannel.thresholdLevel {
+                currentLevel = AudioChannel.thresholdLevel
+            }
+            if currentLevel > AudioChannel.maxInputLevelForAllChannels {
+                AudioChannel.maxInputLevelForAllChannels = currentLevel
+            }
+        }
+    }
+}
+var leftChannel = AudioChannel()
+var rightChannel = AudioChannel()
+leftChannel.currentLevel = 7
+print(leftChannel.currentLevel)
+print(AudioChannel.maxInputLevelForAllChannels)
+rightChannel.currentLevel = 113141
+print(rightChannel.currentLevel)
+print(AudioChannel.maxInputLevelForAllChannels)
+*/
+
