@@ -1424,7 +1424,7 @@ print(AudioChannel.maxInputLevelForAllChannels)
 rightChannel.currentLevel = 113141
 print(rightChannel.currentLevel)
 print(AudioChannel.maxInputLevelForAllChannels)
-*/
+ 
 // Methods
 // Instance Methods
 class Counter {
@@ -1535,3 +1535,107 @@ if player.tracker.advance(to: 6) {
 } else {
     print("level 6 has not yet been unlocked")
 }
+
+// Subscripts
+// Subscript Syntax
+struct TimesTable {
+    let multiplier: Int
+    subscript(index: Int) -> Int { multiplier * index }
+}
+let threeTimesTable = TimesTable(multiplier: 3)
+print("six times three is \(threeTimesTable[6])")
+// Subscript Usage
+var numberOfLegs = ["spider": 8, "ant": 6, "cat": 4]
+numberOfLegs["bird"] = 2
+print(numberOfLegs)
+// Subscript Options
+struct Matrix {
+    let rows: Int, columns: Int
+    var grid: [Double]
+    init(rows: Int, columns: Int) {
+        self.rows = rows
+        self.columns = columns
+        grid = Array(repeating: 0.0, count: rows * columns)
+    }
+    func indexIsValid(row: Int, column: Int) -> Bool { row >= 0 && row < rows && column >= 0 && column < columns }
+    subscript(row: Int, column: Int) -> Double {
+        get {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            return grid[(row * columns) + column]
+        }
+        set {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
+        }
+    }
+}
+var matrix = Matrix(rows: 2, columns: 2)
+matrix[0, 1] = 1.5
+matrix[1, 0] = 3.2
+//matrix[3, 3] = 44.121 // 범위를 넘으면 assert
+// Type Subscripts
+enum Planet: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune
+    static subscript(n: Int) -> Planet { Planet(rawValue: n)! }
+}
+let mars = Planet[4]
+print(mars)
+
+// Inheritance
+// Defining a Base Class
+class Vehicle {
+    var currentSpeed = 0.0
+    var description: String { "traveling at \(currentSpeed) miles per hour" }
+    func makeNoise() {  }
+}
+let someVehicle = Vehicle()
+print("Vehicle: \(someVehicle.description)")
+// Subclassing
+class Bicycle: Vehicle {
+    var hasBasket = false
+}
+let bicycle = Bicycle()
+bicycle.hasBasket = true
+bicycle.currentSpeed = 15.0
+print("Bicycle: \(bicycle.description)")
+class Tandem: Bicycle {
+    var currentNumberOfPassengers = 0
+}
+let tandem = Tandem()
+tandem.hasBasket = true
+tandem.currentNumberOfPassengers = 3
+tandem.currentSpeed = 22.0
+print("Tandem: \(tandem.description)")
+// Overriding Methods
+class Train: Vehicle {
+    override func makeNoise() {
+        print("Choo Choo")
+        super.makeNoise()
+    }
+}
+let train = Train()
+train.makeNoise()
+// Overriding Properties
+// Overriding Property Getters and Setters
+class Car: Vehicle {
+    var gear = 1
+    override var description: String { super.description + " in gear \(gear)" }
+}
+let car = Car()
+car.currentSpeed = 25.0
+car.gear = 3
+print("Car: \(car.description)")
+// Overriding Property Observers
+class AutomaticCar: Car {
+    override var currentSpeed: Double {
+        didSet { gear = Int(currentSpeed / 10.0) + 1 }
+    }
+}
+let automatic = AutomaticCar()
+automatic.currentSpeed = 35.0
+print("AutomaticCar: \(automatic.description)")
+// Preventing Overrides
+// final 수정자를 작성한다(final var, final func, final class, final subscript)
+*/
+
+// Initialization
