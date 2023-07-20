@@ -1639,3 +1639,190 @@ print("AutomaticCar: \(automatic.description)")
 */
 
 // Initialization
+// Setting Initial Values for Stored Properties
+// Initializers
+/*
+struct Fahrenheit {
+    var temperature: Double
+    init() {
+        temperature = 32.0
+    }
+}
+var f = Fahrenheit()
+print("The default temperature is \(f.temperature) ℉") */
+// Default Property Values: 프로퍼티가 항상 같은 초기값을 갖는다면 초기화 구문보다 기본값이 더 효율적이다.
+struct Fahrenheit {
+    var temperature = 32.0
+}
+var f = Fahrenheit()
+print("The default temperature is \(f.temperature) ℉")
+// Customizing Initialization
+// Initialization Parameters
+/*
+struct Celsius {
+    var temperatureInCelsius: Double
+    init(fromFahrenheit fahrenheit: Double) {
+        temperatureInCelsius = (fahrenheit - 32.0) / 1.8
+    }
+    init(fromKelvin kelvin: Double) {
+        temperatureInCelsius = kelvin - 273.15
+    }
+}
+let boilingPointOfWater = Celsius(fromFahrenheit: 212.0)
+let freezingPointOfWater = Celsius(fromKelvin: 273.15)
+print(boilingPointOfWater.temperatureInCelsius, freezingPointOfWater.temperatureInCelsius) */
+// Parameter Names and Argument Labels
+struct Color {
+    let red, green, blue: Double
+    init(red: Double, green: Double, blue: Double) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+    }
+    init(white: Double) {
+        red = white
+        green = white
+        blue = white
+    }
+}
+let magenta = Color(red: 1.0, green: 0.0, blue: 1.0)
+let halfGray = Color(white: 0.5)
+//let veryGreen = Color(0.0, 1.0, 0.0)
+// Initializer Parameters Without Argument Labels
+struct Celsius {
+    var temperatureInCelsius: Double
+    init(fromFahrenheit fahrenheit: Double) {
+        temperatureInCelsius = (fahrenheit - 32.0) / 1.8
+    }
+    init(fromKelvin kelvin: Double) {
+        temperatureInCelsius = kelvin - 273.15
+    }
+    init(_ celsius: Double) {
+        temperatureInCelsius = celsius
+    }
+}
+let bodyTemperature = Celsius(37.0)
+print(bodyTemperature.temperatureInCelsius)
+// Optional Property Types
+/*
+class SurveyQuestion {
+    var text: String
+    var response: String?
+    init(text: String) {
+        self.text = text
+    }
+    func ask() {
+        print(text)
+    }
+}
+let cheeseQuestion = SurveyQuestion(text: "Do you like cheese?")
+cheeseQuestion.ask()
+cheeseQuestion.response = "Yes, I do like cheese." */
+// Assigning Constant Properties During Initialization
+class SurveyQuestion {
+    let text: String
+    var response: String?
+    init(text: String) {
+        self.text = text
+    }
+    func ask() {
+        print(text)
+    }
+}
+let beetsQuestion = SurveyQuestion(text: "How about beets?")
+beetsQuestion.ask()
+beetsQuestion.response = "I also like beets. (But not with cheese.)"
+// Default Initializers
+class ShoppingListItem {
+    var name: String?
+    var quantity = 1
+    var purchased = false
+}
+var item = ShoppingListItem()
+// Memberwise Initializers for Structure Types
+struct Size {
+    var width = 0.0, height = 0.0
+}
+let twoByTwo = Size(width: 2.0, height: 2.0)
+let zeroByTwo = Size(height: 2.0)
+let zeroByZero = Size()
+print(twoByTwo, zeroByTwo, zeroByZero)
+// Initializer Delegation for Value Types
+/*
+struct Size {
+    var width = 0.0, height = 0.0
+} */
+struct Point {
+    var x = 0.0, y = 0.0
+}
+struct Rect {
+    var origin = Point()
+    var size = Size()
+    init() {} // return Rect(Point(x: 0.0, y: 0.0), Size(width: 0.0, height: 0.0))
+    init(origin: Point, size: Size) {
+        self.origin = origin
+        self.size = size
+    }
+    init(center: Point, size: Size) {
+        let originX = center.x - (size.width / 2)
+        let originY = center.y - (size.height / 2)
+        self.init(origin: Point(x: originX, y: originY), size: size)
+    }
+}
+let basicRect = Rect()
+let originRect = Rect(origin: Point(x: 2.0, y: 2.0), size: Size(width: 5.0, height: 5.0))
+let centerRect = Rect(center: Point(x: 4.0, y: 4.0), size: Size(width: 3.0, height: 3.0))
+print(basicRect, originRect, centerRect)
+// Class Inheritance and Initialization
+// Designated Initializers and Convenience Initializers
+// Syntax for Designated and Convenience Initializers
+/*
+init(<#parameters#>) {
+   <#statements#>
+}
+convenience init(<#parameters#>) {
+   <#statements#>
+} */
+// Initializer Delegation for Class Types
+// Two-Phase Initialization
+// Initializer Inheritance and Overriding
+class Vehicle {
+    var numberOfWheels = 0
+    var description: String {
+        return "\(numberOfWheels) wheel(s)"
+    }
+}
+let vehicle = Vehicle()
+print("Vehicle: \(vehicle.description)")
+class Bicycle: Vehicle {
+    override init() {
+        super.init()
+        numberOfWheels = 2
+    }
+}
+let bicycle = Bicycle()
+print("Bicycle: \(bicycle.description)")
+class Hoverboard: Vehicle {
+    var color: String
+    init(color: String) {
+        self.color = color
+        // super.init() implicitly called here
+    }
+    override var description: String {
+        return "\(super.description) in a beautiful \(color)"
+    }
+}
+let hoverboard = Hoverboard(color: "silver")
+print("Hoverboard: \(hoverboard.description)")
+// Designated and Convenience Initializaers in Action
+class Food {
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    convenience init() {
+        self.init(name: "[Unnamed]")
+    }
+}
+let namedMeat = Food(name: "Bacon")
+
