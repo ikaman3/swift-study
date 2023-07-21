@@ -1733,6 +1733,7 @@ let beetsQuestion = SurveyQuestion(text: "How about beets?")
 beetsQuestion.ask()
 beetsQuestion.response = "I also like beets. (But not with cheese.)"
 // Default Initializers
+/*
 class ShoppingListItem {
     var name: String?
     var quantity = 1
@@ -1746,12 +1747,11 @@ struct Size {
 let twoByTwo = Size(width: 2.0, height: 2.0)
 let zeroByTwo = Size(height: 2.0)
 let zeroByZero = Size()
-print(twoByTwo, zeroByTwo, zeroByZero)
+print(twoByTwo, zeroByTwo, zeroByZero) */
 // Initializer Delegation for Value Types
-/*
 struct Size {
     var width = 0.0, height = 0.0
-} */
+}
 struct Point {
     var x = 0.0, y = 0.0
 }
@@ -1825,4 +1825,37 @@ class Food {
     }
 }
 let namedMeat = Food(name: "Bacon")
+let mysteryMeat = Food()
+class RecipeIngredient: Food {
+    var quantity: Int
+    init(name: String, quantity: Int) {
+        self.quantity = quantity
+        super.init(name: name)
+    }
+    override convenience init(name: String) {
+        self.init(name: name, quantity: 1)
+    }
+}
+let oneMysteryItem = RecipeIngredient()
+let oneBacon = RecipeIngredient(name: "Bacon")
+let sixEggs = RecipeIngredient(name: "Eggs", quantity: 6)
+class ShoppingListItem: RecipeIngredient {
+    var purchased = false
+    var description: String {
+        var output = "\(quantity) x \(name)"
+        output += purchased ? " ✔" : " ✘"
+        return output
+    }
+}
+var breakfastList = [
+    ShoppingListItem(),
+    ShoppingListItem(name: "Bacon"),
+    ShoppingListItem(name: "Eggs", quantity: 6)
+]
+breakfastList[0].name = "Orange juice"
+breakfastList[0].purchased = true
+for item in breakfastList {
+    print(item.description)
+}
+// Failable Initializers
 
