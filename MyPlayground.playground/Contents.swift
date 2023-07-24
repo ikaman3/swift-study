@@ -2021,7 +2021,7 @@ print(board.squareIsBlackAt(row: 7, column: 7))
  deinit {
     perform the deinitialization
  }
- */
+
 // Deinitalizars in Action
 class Bank {
     static var coinsInBank = 10_000
@@ -2055,4 +2055,96 @@ print("The bank now only has \(Bank.coinsInBank) coins left")
 playerOne = nil
 print("PlayerOne has left the game")
 print("The bank now has \(Bank.coinsInBank) coins")
+*/
 
+// Optional Chaining
+// Optional Chaining as Alternative to Forced Unwrapping
+/*
+class Person {
+    var residence: Residence?
+}
+class Residence {
+    var numberOfRooms = 1
+}
+let john = Person()
+//let roomCount = john.residence!.numberOfRooms
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+} else {
+    print("Unable to retrieve the number of rooms.")
+}
+john.residence = Residence()
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+    print(type(of: roomCount))
+    print(type(of: john.residence?.numberOfRooms))
+} else {
+    print("Unable to retrieve the number of rooms.")
+} */
+// Defining Model Classes for Optional Chaining
+class Person {
+    var residence: Residence?
+}
+class Residence {
+    var rooms: [Room] = []
+    var numberOfRooms: Int {
+        return rooms.count
+    }
+    subscript(i: Int) -> Room {
+        get { rooms[i] }
+        set { rooms[i] = newValue }
+    }
+    func printNumberOfRooms() {
+        print("The number of rooms is \(numberOfRooms)")
+    }
+    var address: Address?
+}
+class Room {
+    let name: String
+    init(name: String) { self.name = name }
+}
+class Address {
+    var buildingName: String?
+    var buildingNumber: String?
+    var street: String?
+    func buildingIdentifier() -> String? {
+        if let buildingNumber = buildingNumber, let street = street {
+            return "\(buildingNumber) \(street)"
+        } else if buildingName != nil {
+            return buildingName
+        } else {
+            return nil
+        }
+    }
+}
+// Accessing Properties Through Optional Chaining
+let john = Person()
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+} else {
+    print("Unable to retrieve the number of rooms.")
+}
+let someAddress = Address()
+someAddress.buildingNumber = "29"
+someAddress.street = "Acacia Road"
+john.residence?.address = someAddress
+func createAddress() -> Address {
+    print("Function was called.")
+    let someAddress = Address()
+    someAddress.buildingNumber = "30"
+    someAddress.street = "Bcacia Road"
+    return someAddress
+}
+john.residence?.address = createAddress()
+// Calling Methods Through Optional Chaining
+if john.residence?.printNumberOfRooms() != nil {
+    print("It Was possible to print the number of rooms.")
+} else {
+    print("It was not possible to print the number of rooms.")
+}
+if (john.residence?.address = someAddress) != nil {
+    print("It was possible to set the address.")
+} else {
+    print("It was not possible to set the address.")
+}
+// Accessing Subscripts Through Optional Chaining
