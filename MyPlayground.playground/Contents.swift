@@ -2148,3 +2148,20 @@ if (john.residence?.address = someAddress) != nil {
     print("It was not possible to set the address.")
 }
 // Accessing Subscripts Through Optional Chaining
+if let firstRoomName = john.residence?[0].name {
+    print("The first room name is \(firstRoomName).")
+} else {
+    print("Unable to retrieve the first room name.")
+}
+john.residence?[0] = Room(name: "Bathroom")
+let johnsHouse = Residence()
+johnsHouse.rooms.append(Room(name: "Living Room"))
+johnsHouse.rooms.append(Room(name: "Kitchen"))
+john.residence = johnsHouse
+if let firstRoomName = john.residence?[0].name {
+    print("The first room name is \(firstRoomName).")
+} else {
+    print("Unable to retrieve the first room name.")
+}
+// Accessing Subscripts of Optional Type
+
