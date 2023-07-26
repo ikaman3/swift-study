@@ -2055,7 +2055,6 @@ print("The bank now only has \(Bank.coinsInBank) coins left")
 playerOne = nil
 print("PlayerOne has left the game")
 print("The bank now has \(Bank.coinsInBank) coins")
-*/
 
 // Optional Chaining
 // Optional Chaining as Alternative to Forced Unwrapping
@@ -2164,4 +2163,37 @@ if let firstRoomName = john.residence?[0].name {
     print("Unable to retrieve the first room name.")
 }
 // Accessing Subscripts of Optional Type
+var testScores = ["Dave": [86, 82, 84], "Bev":  [79, 94, 81]]
+testScores["Dave"]?[0] = 91 // Success
+testScores["Bev"]?[0] += 1 // Success
+testScores["Brian"]?[0] = 72 // Fail
+// Linking Multiple Levels of Chaining
+if let johnsStreet = john.residence?.address?.street {
+    print("John's street name is \(johnsStreet).")
+} else {
+    print("Unable to retrieve the address.")
+}
+let johnsAddress = Address()
+johnsAddress.buildingName = "The Larches"
+johnsAddress.street = "Laurel Street"
+john.residence?.address = johnsAddress
+if let johnsStreet = john.residence?.address?.street {
+    print("John's street name is \(johnsStreet).")
+} else {
+    print("Unable to retrieve the address.")
+}
+// Chaining on Methods with Optional Return Values
+if let buildingIdentifier = john.residence?.address?.buildingIdentifier() {
+    print("John's building identifier is \(buildingIdentifier).")
+}
+if let beginsWithThe = john.residence?.address?.buildingIdentifier()?.hasPrefix("The") {
+    if beginsWithThe {
+        print("John's building identifier begins with \"The\".")
+    } else {
+        print("John's building identifier does not begin with \"The\".")
+    }
+}
+*/
+
+// Error Handling
 
