@@ -2331,7 +2331,137 @@ func processFile(filename: String) throws {
         // close(file) is called here, at the end of the scope.
     }
 } */
+ 
+// Concurrency
+/* Swift의 언어 지원 없이 작성한 동시성 코드
+listPhotos(inGallery: "Summer Vacation") { photoNames in
+    let sortedNames = photoNames.sorted()
+    let name = sortedNames[0]
+    downloadPhoto(named: name) { photo in
+        show(photo)
+    }
+} */
+// Defining and Calling Asynchronous Functions
+/*
+func listPhotos(inGallery name: String) async throws -> [String] {
+    let result = //... some asynchronous networking code ...
+    return result
+}
+let photoNames = await listPhotos(inGallery: "Summer Vacation")
+let sortedNames = photoNames.sorted()
+let name = sortedNames[0]
+let photo = await downloadPhoto(named: name)
+show(photo)
+let firstPhoto = await listPhotos(inGallery: "Summer Vacation")[0]
+add(firstPhoto toGallery: "Road Trip")
+// At this point, firstPhoto is temporarily in both galleries.
+remove(firstPhoto fromGallery: "Summer Vacation") */
+/*
+func move(_ photoName: String, from source: String, to destination: String) {
+    add(photoName, to: destination)
+    remove(photoName, from: source)
+}
+//...
+let firstPhoto = await listPhotos(inGallery: "Summer Vacation")[0]
+move(firstPhoto, from: "Summer Vacation", to: "Road Trip") */
+/* 네트워크 작업 대기를 시뮬레이션하기 위해 sleep을 사용하는 함수
+ func listPhotos(inGallery name: String) async throws -> [String] {
+     try await Task.sleep(until: .now + .seconds(2), clock: .continuous)
+     return ["IMG001", "IMG99", "IMG0404"]
+ } */
+// Asynchronous Sequences
+/*
+import Foundation
+let handle = FileHandle.standardInput
+for try await line in handle.bytes.lines {
+    print(line)
+}
+print("얘가 먼저 처리됨 ㅇㅇ") */
+// Calling Asynchronous Functions in Parallel
+/* 갤러리에서 처음 세 장의 사진을 가져옴.
+ 단점: 다운로드가 비동기이고 진행되는 동안 다른 작업을 수행할 수 있지만 downloadPhoto에 대한 호출운 한 번에 하나만 실행됨. 각 사진은 다음 사진이 다운로드를 시작하기 전에 완료된다. 그러나 이것을 기다릴 필요가 없다. 각 사진은 개별적으로 또는 동시에 다운로드 할 수 있다.
+let firstPhoto = await downloadPhoto(named: photoNames[0])
+let secondPhoto = await downloadPhoto(named: photoNames[1])
+let thirdPhoto = await downloadPhoto(named: photoNames[2])
+
+let photos = [firstPhoto, secondPhoto, thirdPhoto]
+show(photos) */
+/* 비동기 함수를 호출하고 주변의 코드와 병렬로 실행하려면 상수를 정의할 때 let 앞에 async 를 작성하고 상수를 사용할 때마다 await 를 작성합니다.
+ downloadPhoto(named:) 을 호출하는 세가지는 모두 이전 호출이 완료되길 기다리지 않고 시작됩니다.
+ 코드가 함수의 결과를 기다리기 위해 일시 중단되지 않기 때문에 이러한 함수 호출 중 어느 것도 await 로 표시하지 않습니다.
+ photos 가 정의된 라인까지 실행이 계속됩니다 — 이 시점에서 프로그램은 이러한 비동기 호출의 결과를 필요로 하므로 세 장의 사진이 모두 다운로드 될 때까지 실행을 일시 중단하기 위해 await 를 작성합니다.
+async let firstPhoto = downloadPhoto(named: photoNames[0])
+async let secondPhoto = downloadPhoto(named: photoNames[1])
+async let thirdPhoto = downloadPhoto(named: photoNames[2])
+
+let photos = await [firstPhoto, secondPhoto, thirdPhoto]
+show(photos) */
+// Tasks and Task Groups
+/*
+await withTaskGroup(of: Data.self) { taskGroup in
+    let photoNames = await listPhotos(inGallery: "Summer Vacation")
+    for name in photoNames {
+        taskGroup.addTask { await downloadPhoto(named: name) }
+    }
+} */
+// Unstructured Concurrency
+/*
+let newPhoto = // ... some photo data ...
+let handle = Task {
+    return await add(newPhoto, toGalleryNamed: "Spring Adventures")
+}
+let result = await handle.value */
+// Task Cancellation
+// Actors
+/*
+actor TemperatureLogger {
+    let label: String
+    var measurements: [Int]
+    private(set) var max: Int
+
+    init(label: String, measurement: Int) {
+        self.label = label
+        self.measurements = [measurement]
+        self.max = measurement
+    }
+}
+let logger = TemperatureLogger(label: "Outdoors", measurement: 25)
+print(await logger.max)
+extension TemperatureLogger {
+    func update(with measurement: Int) {
+        measurements.append(measurement)
+        if measurement > max {
+            max = measurement
+        }
+    }
+} */
+// Sendable Type
+/*
+struct TemperatureReading: Sendable {
+    var measurement: Int
+}
+
+extension TemperatureLogger {
+    func addReading(from reading: TemperatureReading) {
+        measurements.append(reading.measurement)
+    }
+}
+
+let logger = TemperatureLogger(label: "Tea kettle", measurement: 85)
+let reading = TemperatureReading(measurement: 45)
+await logger.addReading(from: reading)
+
+struct TemperatureReading {
+    var measurement: Int
+}
+
+struct FileDescriptor {
+    let rawValue: CInt
+}
+
+
+@available(*, unavailable)
+extension FileDescriptor: Sendable { } */
 */
 
-// Concurrency
-
+// Macros
