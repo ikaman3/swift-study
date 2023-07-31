@@ -1,26 +1,26 @@
 //
-//  ContentView.swift
-//  myfirst
+//  MainView.swift
+//  todo
 //
-//  Created by main on 2023/06/23.
+//  Created by main on 2023/07/28.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct MainView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
-            Text("Hell, world!")
+            Text("Hello, world!")
         }
         .padding()
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        MainView()
     }
 }
