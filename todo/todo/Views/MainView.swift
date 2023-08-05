@@ -12,38 +12,32 @@
 import SwiftUI
 
 struct MainView: View {
+    
+    // MARK: - Properties
+    
     @State private var newTodo: String = ""
     @State private var todos: [String] = []
     private let fileName = "todos.txt"
     private let fileManager = FileManager()
     private let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
+    // MARK: - Initializers
+    
+    
+    // MARK: - Methods
+    
     var body: some View {
         VStack {
             HStack {
                 TextField("Enter a new todo", text: $newTodo)
                     .onSubmit {
-                        Task {
-                            do {
-                                addTodo()
-                                readTodosFromFile()
-                            } catch {
-                                print("Failed onSubmit")
-                            }
-                        }
+                        addTodo()
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .frame(height: 50)
                 Spacer()
                 Button("Add") {
-                    Task {
-                        do {
-                            addTodo()
-                            readTodosFromFile()
-                        } catch {
-                            print("Failed Button(\"Add\")")
-                        }
-                    }
+                    addTodo()
                 }
             }
             
@@ -64,6 +58,8 @@ struct MainView: View {
                     }
                 }
             }
+            // View가 화면에 표시되기 전에 파일에서 데이터를 읽어와서 todos 배열에 할당
+            .onAppear(perform: loadTodosFromFile)
         }
         .padding()
     }
@@ -95,12 +91,11 @@ struct MainView: View {
                 print("Failed deleteTodo()")
             }
         }
-        
-        readTodosFromFile()
     }
 
     func clearTodos() {
         todos = []
+        newTodo = ""
         // todos.txt 파일을 빈 문자열로 덮어쓰기
         let fileURL = documentDirectory!.appendingPathComponent(fileName)
         
@@ -110,7 +105,6 @@ struct MainView: View {
             print("Failed clearTodos()")
         }
         
-        newTodo = ""
     }
     
     func writeTodosToFile(todo: String) {
@@ -136,17 +130,35 @@ struct MainView: View {
         }
     }
     
-    func readTodosFromFile() {
+    func readTodosFromFile() -> String {
         let fileURL = documentDirectory!.appendingPathComponent(fileName)
         if fileManager.fileExists(atPath: fileURL.path) {
             do {
                 let text = try String(contentsOf: fileURL, encoding: .utf8)
+                print("From readTodosFromFile():")
                 print(text)
+                return text
             } catch {
                 print("Failed readTodosFromFile()")
+                return ""
             }
         } else {
             print("Not file exist.")
+            return ""
+        }
+    }
+    
+    func loadTodosFromFile() {
+        let fileTodos = readTodosFromFile()
+        if !fileTodos.isEmpty {
+            var tempList: [String] = []
+            for i in 0 ..< fileTodos.split(separator: "\n").count {
+                tempList.append(String(fileTodos.split(separator: "\n")[i]))
+                print("todos.append(\(String(fileTodos.split(separator: "\n")[i])))")
+            }
+            todos = tempList
+        } else {
+            print("File is empty.")
         }
     }
 }

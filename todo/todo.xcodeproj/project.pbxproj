@@ -53,7 +53,6 @@
 			children = (
 				AA1EA1BD2A73AC410099DE3F /* todoApp.swift */,
 				AA1EA1C12A73AC420099DE3F /* Assets.xcassets */,
-				AA1EA1CD2A73ACB40099DE3F /* Models */,
 				AA1EA1CB2A73AC800099DE3F /* Views */,
 				AA1EA1C32A73AC420099DE3F /* Preview Content */,
 			);
@@ -74,13 +73,6 @@
 				AA1EA1BF2A73AC410099DE3F /* MainView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		AA1EA1CD2A73ACB40099DE3F /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
