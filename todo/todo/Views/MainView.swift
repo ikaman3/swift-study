@@ -5,10 +5,6 @@
 //  Created by main on 2023/07/28.
 //
 
-/*  To do List
-    앱 실행 시 파일에서 읽어서 todos에 저장
-*/
-
 import SwiftUI
 
 struct MainView: View {
@@ -20,11 +16,6 @@ struct MainView: View {
     private let fileName = "todos.txt"
     private let fileManager = FileManager()
     private let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    
-    // MARK: - Initializers
-    
-    
-    // MARK: - Methods
     
     var body: some View {
         VStack {
@@ -63,6 +54,8 @@ struct MainView: View {
         }
         .padding()
     }
+    
+    // MARK: - Methods
     
     func addTodo() {
         if !newTodo.isEmpty {
@@ -135,8 +128,6 @@ struct MainView: View {
         if fileManager.fileExists(atPath: fileURL.path) {
             do {
                 let text = try String(contentsOf: fileURL, encoding: .utf8)
-                print("From readTodosFromFile():")
-                print(text)
                 return text
             } catch {
                 print("Failed readTodosFromFile()")
@@ -154,7 +145,6 @@ struct MainView: View {
             var tempList: [String] = []
             for i in 0 ..< fileTodos.split(separator: "\n").count {
                 tempList.append(String(fileTodos.split(separator: "\n")[i]))
-                print("todos.append(\(String(fileTodos.split(separator: "\n")[i])))")
             }
             todos = tempList
         } else {
