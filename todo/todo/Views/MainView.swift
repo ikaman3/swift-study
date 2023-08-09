@@ -81,7 +81,7 @@ struct MainView: View {
                         }
                         .toggleStyle(CheckboxStyle()) // Optional: 체크박스 스타일 적용
                         Spacer()
-                        Image(systemName: "trash")
+                        Image(systemName: "trash.slash")
                             .foregroundColor(.red)
                             .onTapGesture {
                                 deleteTodo(todo)
