@@ -15,10 +15,16 @@
  */
 
 import SwiftUI
+import CoreData
 
 struct MainView: View {
     
     // MARK: - Properties
+    
+    @Environment(\.managedObjectContext) var managedObjContext
+//    @Environment(\.dismiss) var dismiss // 뷰 닫기
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Todo.date, ascending: true)]) var todo: FetchedResults<Todo>
+
     
     @State private var newTodo: String = ""
     @State private var todos: [String] = []
@@ -40,22 +46,22 @@ struct MainView: View {
                 }
             }
             
-//            Button("Clear") {
-//                clearTodos()
-//            }
-            
             List {
-                ForEach(todos, id: \.self) { todo in
-                    HStack {
-                        Text(todo)
-                            .swipeActions {
-                                Button(role: .destructive) {
-                                    deleteTodo(todo)
-                                } label: {
-                                    Label("Delete", systemImage: "trash.slash")
-                                }
-                            }
-                    }
+//                ForEach(todos, id: \.self) { todo in
+//                    HStack {
+//                        Text(todo)
+//                            .swipeActions {
+//                                Button(role: .destructive) {
+//                                    deleteTodo(todo)
+//                                } label: {
+//                                    Label("Delete", systemImage: "trash.slash")
+//                                }
+//                            }
+//                    }
+//                }
+                
+                ForEach(todo) { t in
+                    Text(t.text ?? "")
                 }
             }
             // View가 화면에 표시되기 전에 파일에서 데이터를 읽어와서 todos 배열에 할당
@@ -67,10 +73,16 @@ struct MainView: View {
     // MARK: - Methods
     
     func addTodo() {
+//        if !newTodo.isEmpty {
+//            todos.append(newTodo)
+//            writeTodosToFile(todo: newTodo)
+//            newTodo = ""
+//        }
+        
         if !newTodo.isEmpty {
             todos.append(newTodo)
-            writeTodosToFile(todo: newTodo)
             newTodo = ""
+            TodoController().addTodo(text: newTodo, context: managedObjContext)
         }
     }
     
