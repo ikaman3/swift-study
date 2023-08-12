@@ -16,21 +16,6 @@
 
 import SwiftUI
 
-struct CheckboxStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        Button(action: {
-            configuration.isOn.toggle()
-        }) {
-            HStack {
-                Image(systemName: configuration.isOn ? "checkmark.square" : "square")
-                    .foregroundColor(configuration.isOn ? .accentColor : .secondary)
-                configuration.label
-            }
-        }
-        .buttonStyle(PlainButtonStyle()) // 버튼 스타일을 무효화하여 보이지 않도록 함
-    }
-}
-
 struct MainView: View {
     
     // MARK: - Properties
@@ -48,43 +33,27 @@ struct MainView: View {
                     .onSubmit {
                         addTodo()
                     }
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .frame(height: 50)
+                    .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
                 Spacer()
                 Button("Add") {
                     addTodo()
                 }
             }
             
-            Button("Clear") {
-                clearTodos()
-            }
+//            Button("Clear") {
+//                clearTodos()
+//            }
             
             List {
                 ForEach(todos, id: \.self) { todo in
                     HStack {
-                        // 체크박스 Toggle 추가
-                        Toggle(isOn: Binding(
-                            get: { todos.contains(todo) },
-                            set: { isChecked in
-                                if isChecked {
-                                    todos.append(todo)
-                                } else {
-                                    if let index = todos.firstIndex(of: todo) {
-                                        todos.remove(at: index)
-                                    }
+                        Text(todo)
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    deleteTodo(todo)
+                                } label: {
+                                    Label("Delete", systemImage: "trash.slash")
                                 }
-//                                writeTodosToFile(todo: todo) // 체크 상태 변경시 파일에도 저장
-                            }
-                        )) {
-                            Text(todo)
-                        }
-                        .toggleStyle(CheckboxStyle()) // Optional: 체크박스 스타일 적용
-                        Spacer()
-                        Image(systemName: "trash.slash")
-                            .foregroundColor(.red)
-                            .onTapGesture {
-                                deleteTodo(todo)
                             }
                     }
                 }
