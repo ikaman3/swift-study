@@ -1,6 +1,9 @@
 # swift_study
 SwiftUI 프레임워크를 사용한 iOS 개발을 하며 배운 것을 기록 남김
 
+## SwiftUI
+```@Environment(\.dismiss) var dismiss // 뷰 닫기```
+
 ## Debugging
 ### Core Data 레코드 직접 보기 및 수정
 AppSchema 설정에서 EditSchema를 선택하고 Arguments에 아래의 두 줄을 추가한다.  
@@ -19,6 +22,4 @@ AppSchema 설정에서 EditSchema를 선택하고 Arguments에 아래의 두 줄
 ### 하이퍼링크 달기 
 [URL Lable](URL)
 ### 코드 블록
-```
-백틱 3개 사이에 코드
-```
+``` 백틱 3개 사이에 코드 ```
