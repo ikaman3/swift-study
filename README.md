@@ -12,3 +12,13 @@ AppSchema 설정에서 EditSchema를 선택하고 Arguments에 아래의 두 줄
 해당 파일을 다양한 SQLite 에디터로(db-browser-for-sqlite 등) 열어 볼 수 있다.  
 수정하고 저장하면 DB에 적용된다.  
 [참고 블로그](https://eastroot1590.tistory.com/entry/Core-Data-1)  
+
+## Mark down 작성법
+### 줄바꿈
+문장 뒤에 스페이스 2번  
+### 하이퍼링크 달기 
+[URL Lable](URL)
+### 코드 블록
+₩₩₩
+백틱 3개 사이에 코드
+₩₩₩
