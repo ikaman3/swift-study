@@ -19,6 +19,6 @@ AppSchema 설정에서 EditSchema를 선택하고 Arguments에 아래의 두 줄
 ### 하이퍼링크 달기 
 [URL Lable](URL)
 ### 코드 블록
-₩₩₩
+```
 백틱 3개 사이에 코드
-₩₩₩
+```
