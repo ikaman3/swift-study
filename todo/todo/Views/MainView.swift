@@ -46,7 +46,7 @@ struct MainView: View {
                         Text(todo.text ?? "Undefined")
                             .swipeActions {
                                 Button(role: .destructive) {
-//                                    deleteTodo(todo)
+                                    deleteTodo(todo)
                                 } label: {
                                     Label("Delete", systemImage: "trash.slash")
                                 }
@@ -69,10 +69,10 @@ struct MainView: View {
     
     // TODO: editTodo
     
-//    func deleteTodo(_ todo: Todo) {
-//        TodoController().deleteTodo(todo: todo, context: managedObjContext)
-//
-//    }
+    func deleteTodo(_ todo: Todo) {
+        TodoController().deleteTodo(todo: todo, context: managedObjContext)
+    }
+    
 }
     
 struct MainView_Previews: PreviewProvider {

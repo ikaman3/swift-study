@@ -43,14 +43,14 @@ class TodoController: ObservableObject {
         saveChanges(context: context)
     }
     
-    func editTodo(todo: Todo, text: String, context: NSManagedObjectContext) {
-        todo.text = text
+    func editTodo(todo: Todo, newText: String, context: NSManagedObjectContext) {
+        todo.text = newText
         
         saveChanges(context: context)
     }
     
     func deleteTodo(todo: Todo, context: NSManagedObjectContext) {
-        container.viewContext.delete(todo)
+        context.delete(todo)
         
         saveChanges(context: context)
     }
