@@ -23,12 +23,14 @@ class TodoController: ObservableObject {
     
     // MARK: Method
     
-    func save(context: NSManagedObjectContext) {
-        do {
-            try context.save()
-            print("Data saved.")
-        } catch {
-            print("We could not save the data...")
+    func saveChanges(context: NSManagedObjectContext) {
+        if context.hasChanges {
+            do {
+                try context.save()
+                print("Data saved.")
+            } catch {
+                print("Could not save changes to Core Data.", error.localizedDescription)
+            }
         }
     }
     
@@ -38,13 +40,19 @@ class TodoController: ObservableObject {
         todo.date = Date()
         todo.text = text
         
-        save(context: context)
+        saveChanges(context: context)
     }
     
     func editTodo(todo: Todo, text: String, context: NSManagedObjectContext) {
         todo.text = text
         
-        save(context: context)
+        saveChanges(context: context)
+    }
+    
+    func deleteTodo(todo: Todo, context: NSManagedObjectContext) {
+        container.viewContext.delete(todo)
+        
+        saveChanges(context: context)
     }
 }
 
