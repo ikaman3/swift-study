@@ -43,13 +43,22 @@ struct MainView: View {
             List {
                 ForEach(todos, id: \.id) { todo in
                     HStack {
-                        Text(todo.text ?? "Undefined")
+                        Text(todo.text ?? "")
                             .swipeActions {
+                                // Delete
                                 Button(role: .destructive) {
                                     deleteTodo(todo)
                                 } label: {
                                     Label("Delete", systemImage: "trash.slash")
                                 }
+                                
+                                // Edit
+                                Button {
+                                    editTodo(todo, newTodo: newTodo)
+                                } label: {
+                                    Label("Edit", systemImage: "square.and.pencil")
+                                }
+                                .tint(.blue)
                             }
                     }
                 }
@@ -68,6 +77,9 @@ struct MainView: View {
     }
     
     // TODO: editTodo
+    func editTodo(_ todo: Todo, newTodo: String) {
+        
+    }
     
     func deleteTodo(_ todo: Todo) {
         TodoController().deleteTodo(todo: todo, context: managedObjContext)

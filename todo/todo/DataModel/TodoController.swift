@@ -43,6 +43,7 @@ class TodoController: ObservableObject {
         saveChanges(context: context)
     }
     
+    // id, date는 제외하고 text만 업데이트
     func editTodo(todo: Todo, newText: String, context: NSManagedObjectContext) {
         todo.text = newText
         
