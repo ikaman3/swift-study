@@ -2,7 +2,28 @@
 SwiftUI 프레임워크를 사용한 iOS 개발을 하며 배운 것을 기록 남김
 
 ## SwiftUI
+### View를 닫는 코드
 ```@Environment(\.dismiss) var dismiss // 뷰 닫기```
+### Swipe하여 다양한 메뉴가 나오는 코드
+```
+.swipeActions {
+      // Delete
+      Button(role: .destructive) {
+          deleteTodo(todo)
+      } label: {
+          Label("Delete", systemImage: "trash.slash")
+      }
+      
+      // Edit
+      Button {
+          editTodo(todo, newTodo: newTodo)
+      } label: {
+          Label("Edit", systemImage: "square.and.pencil")
+      }
+      .tint(.blue)
+  }
+```
+
 
 ## Debugging
 ### Core Data 레코드 직접 보기 및 수정
