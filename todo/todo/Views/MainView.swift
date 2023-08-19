@@ -40,27 +40,28 @@ struct MainView: View {
                 }
             }
             
+            // TODO: 여러 줄이 되어도 텍스트가 전부 보이게
             List {
                 ForEach(todos, id: \.id) { todo in
-                    HStack {
-                        Text(todo.text ?? "")
-                            .swipeActions {
-                                // Delete
-                                Button(role: .destructive) {
-                                    deleteTodo(todo)
-                                } label: {
-                                    Label("Delete", systemImage: "trash.slash")
+                    GeometryReader { geometry in
+                        HStack {
+                            TextEditor(text: Binding(
+                                get: { todo.text ?? "" },
+                                set: { newText in
+                                    editTodo(todo, newTodo: newText)
+                                }))
+                                .frame(height: geometry.size.height) // Match the height of the row
+                                .swipeActions {
+                                    // Delete
+                                    Button(role: .destructive) {
+                                        deleteTodo(todo)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash.slash")
+                                    }
                                 }
-                                
-                                // Edit
-                                Button {
-                                    editTodo(todo, newTodo: newTodo)
-                                } label: {
-                                    Label("Edit", systemImage: "square.and.pencil")
-                                }
-                                .tint(.blue)
-                            }
+                        }
                     }
+                    .frame(height: 30) // Set a fixed row height
                 }
             }
         }
@@ -78,7 +79,7 @@ struct MainView: View {
     
     // TODO: editTodo
     func editTodo(_ todo: Todo, newTodo: String) {
-        
+        TodoController().editTodo(todo: todo, newText: newTodo, context: managedObjContext)
     }
     
     func deleteTodo(_ todo: Todo) {
