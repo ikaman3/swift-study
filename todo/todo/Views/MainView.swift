@@ -43,32 +43,38 @@ struct MainView: View {
             // TODO: 여러 줄이 되어도 텍스트가 전부 보이게
             List {
                 ForEach(todos, id: \.id) { todo in
-                    GeometryReader { geometry in
-                        HStack {
-                            TextEditor(text: Binding(
-                                get: { todo.text ?? "" },
-                                set: { newText in
-                                    editTodo(todo, newTodo: newText)
-                                }))
-                                .frame(height: geometry.size.height) // Match the height of the row
-                                .swipeActions {
-                                    // Delete
-                                    Button(role: .destructive) {
-                                        deleteTodo(todo)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash.slash")
-                                    }
+                    HStack {
+                        Text(todo.text ?? "")
+                            .frame(maxHeight: .infinity)
+                            .lineLimit(nil)
+                            .swipeActions {
+                                // TODO: 편집 기능 다시 적용. 편집 전용 뷰를 만들어보자
+                                // Delete
+                                Button(role: .destructive) {
+                                    deleteTodo(todo)
+                                } label: {
+                                    Label("Delete", systemImage: "trash.slash")
                                 }
-                        }
+                            }
                     }
-                    .frame(height: 30) // Set a fixed row height
                 }
             }
         }
         .padding()
+        .onAppear(perform: {
+            loadAllTodos()
+        })
     }
     
     // MARK: - Methods
+    
+    func loadAllTodos() {
+        for todo in todos {
+            if let text = todo.text {
+                TodoController().editTodo(todo: todo, newText: text, context: managedObjContext)
+            }
+        }
+    }
     
     func addTodo() {
         if !newTodo.isEmpty {
@@ -77,7 +83,6 @@ struct MainView: View {
         }
     }
     
-    // TODO: editTodo
     func editTodo(_ todo: Todo, newTodo: String) {
         TodoController().editTodo(todo: todo, newText: newTodo, context: managedObjContext)
     }
