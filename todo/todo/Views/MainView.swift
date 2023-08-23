@@ -40,7 +40,6 @@ struct MainView: View {
                 }
             }
             
-            // TODO: 여러 줄이 되어도 텍스트가 전부 보이게
             List {
                 ForEach(todos, id: \.id) { todo in
                     HStack {
@@ -48,13 +47,20 @@ struct MainView: View {
                             .frame(maxHeight: .infinity)
                             .lineLimit(nil)
                             .swipeActions {
-                                // TODO: 편집 기능 다시 적용. 편집 전용 뷰를 만들어보자
                                 // Delete
                                 Button(role: .destructive) {
                                     deleteTodo(todo)
                                 } label: {
                                     Label("Delete", systemImage: "trash.slash")
                                 }
+                                // TODO: 편집 기능 다시 적용. 편집 전용 뷰를 만들어보자
+                                // Edit
+                                Button {
+                                    
+                                } label: {
+                                    Label("Edit", systemImage: "square.and.pencil")
+                                }
+                                .tint(.blue)
                             }
                     }
                 }
