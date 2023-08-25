@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct todoApp: App {
-    @StateObject private var todoController = TodoController()
+    let todoController = TodoController.shared
     
     var body: some Scene {
         WindowGroup {

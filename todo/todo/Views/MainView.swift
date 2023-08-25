@@ -21,7 +21,7 @@ struct MainView: View {
     
     // MARK: - Properties
     
-    @Environment(\.managedObjectContext) var managedObjContext
+    @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Todo.date, ascending: true)]) var todos: FetchedResults<Todo>
 
     @State private var newTodo: String = ""
@@ -77,30 +77,30 @@ struct MainView: View {
     func loadAllTodos() {
         for todo in todos {
             if let text = todo.text {
-                TodoController().editTodo(todo: todo, newText: text, context: managedObjContext)
+                TodoController().editTodo(todo: todo, newText: text, context: viewContext)
             }
         }
     }
     
     func addTodo() {
         if !newTodo.isEmpty {
-            TodoController().addTodo(text: newTodo, context: managedObjContext)
+            TodoController().addTodo(text: newTodo, context: viewContext)
             newTodo = ""
         }
     }
     
     func editTodo(_ todo: Todo, newTodo: String) {
-        TodoController().editTodo(todo: todo, newText: newTodo, context: managedObjContext)
+        TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
     }
     
     func deleteTodo(_ todo: Todo) {
-        TodoController().deleteTodo(todo: todo, context: managedObjContext)
+        TodoController().deleteTodo(todo: todo, context: viewContext)
     }
     
 }
     
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        MainView().environment(\.managedObjectContext, TodoController.preview.container.viewContext)
     }
 }
