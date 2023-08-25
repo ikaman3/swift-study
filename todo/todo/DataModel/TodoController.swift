@@ -11,20 +11,19 @@ import CoreData
 class TodoController: ObservableObject {
     static let shared = TodoController()
     
+    // Canvas Preview
     static var preview: TodoController = {
         let result = TodoController()
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
+        for i in 0..<1 {
             let newTodo = Todo(context: viewContext)
             newTodo.date = Date()
             newTodo.id = UUID()
-            newTodo.text = "test"
+            newTodo.text = "test\(Int.random(in: 1..<99))"
         }
         do {
             try viewContext.save()
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
@@ -74,6 +73,14 @@ class TodoController: ObservableObject {
     
     func deleteTodo(todo: Todo, context: NSManagedObjectContext) {
         context.delete(todo)
+        
+        saveChanges(context: context)
+    }
+    
+    func clearTodos(todos: FetchedResults<Todo>, context: NSManagedObjectContext) {
+        for todo in todos {
+            context.delete(todo)
+        }
         
         saveChanges(context: context)
     }

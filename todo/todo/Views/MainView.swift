@@ -39,6 +39,9 @@ struct MainView: View {
                     addTodo()
                 }
             }
+            Button("Clear All") {
+                clearTodos()
+            }
             
             List {
                 ForEach(todos, id: \.id) { todo in
@@ -97,6 +100,9 @@ struct MainView: View {
         TodoController().deleteTodo(todo: todo, context: viewContext)
     }
     
+    func clearTodos() {
+        TodoController().clearTodos(todos: todos, context: viewContext)
+    }
 }
     
 struct MainView_Previews: PreviewProvider {
