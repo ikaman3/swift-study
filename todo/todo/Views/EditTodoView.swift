@@ -11,18 +11,28 @@ struct EditTodoView: View {
     
     // MARK: - Properties
     
-    @Environment(\.managedObjectContext) var managedObjContext
+    @Environment(\.managedObjectContext) var viewContext
     @Environment(\.dismiss) var dismiss
     
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Todo.date, ascending: true)]) var todos: FetchedResults<Todo>
+    var todo: FetchedResults<Todo>.Element
+    
+    @State private var newTodo = ""
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-struct EditTodoView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditTodoView()
+        Form {
+            TextField("\(todo.text!)", text: $newTodo)
+                .onAppear {
+                    newTodo = todo.text!
+                }
+            
+            HStack {
+                Spacer()
+                Button("Submit") {
+                    TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
+                    dismiss()
+                }
+                Spacer()
+            }
+        }
     }
 }

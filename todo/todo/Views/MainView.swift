@@ -27,52 +27,48 @@ struct MainView: View {
     @State private var newTodo: String = ""
         
     var body: some View {
-        VStack {
-            HStack {
-                TextField("Enter a new todo", text: $newTodo)
-                    .onSubmit {
+        NavigationStack {
+            VStack {
+                HStack {
+                    TextField("Enter a new todo", text: $newTodo)
+                        .onSubmit {
+                            addTodo()
+                        }
+                        .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
+                    Spacer()
+                    Button("Add") {
                         addTodo()
                     }
-                    .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
-                Spacer()
-                Button("Add") {
-                    addTodo()
                 }
-            }
-            Button("Clear All") {
-                clearTodos()
-            }
-            
-            List {
-                ForEach(todos, id: \.id) { todo in
-                    HStack {
-                        Text(todo.text ?? "")
-                            .frame(maxHeight: .infinity)
-                            .lineLimit(nil)
-                            .swipeActions {
-                                // Delete
-                                Button(role: .destructive) {
-                                    deleteTodo(todo)
-                                } label: {
-                                    Label("Delete", systemImage: "trash.slash")
+                
+                // Clear Button
+                Button("Clear") {
+                    TodoController().clearTodos(todos: todos, context: viewContext)
+                }
+                
+                List {
+                    ForEach(todos, id: \.id) { todo in
+                        HStack {
+                            Text(todo.text ?? "")
+                                .swipeActions {
+                                    // Delete Button
+                                    Button(role: .destructive,
+                                           action: { TodoController().deleteTodo(todo: todo, context: viewContext) },
+                                           label: { Label("Delete", systemImage: "trash.slash") })
+                                    // Edit Button
+                                    NavigationLink(destination: EditTodoView(todo: todo),
+                                           label: { Label("Edit", systemImage: "square.and.pencil") })
+                                        .tint(.blue)
                                 }
-                                // TODO: 편집 기능 다시 적용. 편집 전용 뷰를 만들어보자
-                                // Edit
-                                Button {
-                                    
-                                } label: {
-                                    Label("Edit", systemImage: "square.and.pencil")
-                                }
-                                .tint(.blue)
-                            }
+                        }
                     }
                 }
+                .padding([.bottom, .horizontal])
+                .onAppear(perform: {
+                    loadAllTodos()
+                })
             }
         }
-        .padding()
-        .onAppear(perform: {
-            loadAllTodos()
-        })
     }
     
     // MARK: - Methods
@@ -96,13 +92,6 @@ struct MainView: View {
         TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
     }
     
-    func deleteTodo(_ todo: Todo) {
-        TodoController().deleteTodo(todo: todo, context: viewContext)
-    }
-    
-    func clearTodos() {
-        TodoController().clearTodos(todos: todos, context: viewContext)
-    }
 }
     
 struct MainView_Previews: PreviewProvider {
