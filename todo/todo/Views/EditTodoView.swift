@@ -19,18 +19,25 @@ struct EditTodoView: View {
     @State private var newTodo = ""
     
     var body: some View {
-        Form {
-            TextField("\(todo.text!)", text: $newTodo)
-                .onAppear {
-                    newTodo = todo.text!
+        ZStack {
+            Color("TodoColor").ignoresSafeArea()
+            VStack {
+                VStack {
+                    TextField("\(todo.text!)", text: $newTodo)
+                        .onAppear {
+                            newTodo = todo.text!
+                        }
+                    
+                    HStack {
+                        Spacer()
+                        Button("Submit") {
+                            TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
+                            dismiss()
+                        }
+                        Spacer()
+                    }
                 }
-            
-            HStack {
-                Spacer()
-                Button("Submit") {
-                    TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
-                    dismiss()
-                }
+                    .padding()
                 Spacer()
             }
         }

@@ -28,46 +28,48 @@ struct MainView: View {
         
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    TextField("Enter a new todo", text: $newTodo)
+            ZStack {
+                VStack {
+                    HStack {
+                        TextField("Enter a new todo", text: $newTodo)
                         // Press Enter key
-                        .onSubmit {
+                            .onSubmit {
+                                addTodo()
+                            }
+                            .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
+                        Spacer()
+                        // Touch Add Button
+                        Button("Add") {
                             addTodo()
                         }
-                        .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
-                    Spacer()
-                    // Touch Add Button
-                    Button("Add") {
-                        addTodo()
                     }
-                }
                     .padding(.horizontal)
-                
-                // Clear Button
-                Button("Clear") {
-                    TodoController().clearTodos(todos: todos, context: viewContext)
-                }
-                
-                List {
-                    ForEach(todos, id: \.id) { todo in
-                        HStack {
-                            Text(todo.text ?? "")
-                                .swipeActions {
-                                    // Delete Button
-                                    Button(role: .destructive,
-                                           action: { TodoController().deleteTodo(todo: todo, context: viewContext) },
-                                           label: { Label("Delete", systemImage: "trash.slash") })
-                                    // Edit Button
-                                    NavigationLink(
-                                        destination: EditTodoView(todo: todo),
-                                        label: { Label("Edit", systemImage: "square.and.pencil") })
+                    
+                    // Clear Button
+                    Button("Clear") {
+                        TodoController().clearTodos(todos: todos, context: viewContext)
+                    }
+                    
+                    List {
+                        ForEach(todos, id: \.id) { todo in
+                            HStack {
+                                Text(todo.text ?? "")
+                                    .swipeActions {
+                                        // Delete Button
+                                        Button(role: .destructive,
+                                               action: { TodoController().deleteTodo(todo: todo, context: viewContext) },
+                                               label: { Label("Delete", systemImage: "trash.slash") })
+                                        // Edit Button
+                                        NavigationLink(
+                                            destination: EditTodoView(todo: todo),
+                                            label: { Label("Edit", systemImage: "square.and.pencil") })
                                         .tint(.blue)
-                                }
+                                    }
+                            }
                         }
                     }
-                }
                     .padding([.bottom, .horizontal])
+                }
             }
                 .background(Color("TodoColor"))
         }
