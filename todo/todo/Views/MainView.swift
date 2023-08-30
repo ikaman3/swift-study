@@ -31,11 +31,13 @@ struct MainView: View {
             VStack {
                 HStack {
                     TextField("Enter a new todo", text: $newTodo)
+                        // Press Enter key
                         .onSubmit {
                             addTodo()
                         }
                         .textFieldStyle(RoundedBorderTextFieldStyle()).frame(height: 50)
                     Spacer()
+                    // Touch Add Button
                     Button("Add") {
                         addTodo()
                     }
@@ -64,32 +66,17 @@ struct MainView: View {
                     }
                 }
                 .padding([.bottom, .horizontal])
-                .onAppear(perform: {
-                    loadAllTodos()
-                })
             }
         }
     }
     
     // MARK: - Methods
     
-    func loadAllTodos() {
-        for todo in todos {
-            if let text = todo.text {
-                TodoController().editTodo(todo: todo, newText: text, context: viewContext)
-            }
-        }
-    }
-    
     func addTodo() {
         if !newTodo.isEmpty {
             TodoController().addTodo(text: newTodo, context: viewContext)
             newTodo = ""
         }
-    }
-    
-    func editTodo(_ todo: Todo, newTodo: String) {
-        TodoController().editTodo(todo: todo, newText: newTodo, context: viewContext)
     }
     
 }
