@@ -42,6 +42,7 @@ struct MainView: View {
                         addTodo()
                     }
                 }
+                    .padding(.horizontal)
                 
                 // Clear Button
                 Button("Clear") {
@@ -58,15 +59,17 @@ struct MainView: View {
                                            action: { TodoController().deleteTodo(todo: todo, context: viewContext) },
                                            label: { Label("Delete", systemImage: "trash.slash") })
                                     // Edit Button
-                                    NavigationLink(destination: EditTodoView(todo: todo),
-                                           label: { Label("Edit", systemImage: "square.and.pencil") })
+                                    NavigationLink(
+                                        destination: EditTodoView(todo: todo),
+                                        label: { Label("Edit", systemImage: "square.and.pencil") })
                                         .tint(.blue)
                                 }
                         }
                     }
                 }
-                .padding([.bottom, .horizontal])
+                    .padding([.bottom, .horizontal])
             }
+                .background(Color("TodoColor"))
         }
     }
     
