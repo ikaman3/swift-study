@@ -1,4 +1,4 @@
-# swift_study
+# Learn
 SwiftUI 프레임워크를 사용한 iOS 개발을 하며 배운 것을 기록
 
 ## SwiftUI
