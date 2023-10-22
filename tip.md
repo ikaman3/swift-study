@@ -1,9 +1,23 @@
 # Learn
 SwiftUI 프레임워크를 사용한 iOS 개발을 하며 배운 것을 기록
 
+## Mark down 작성법
+### 줄바꿈
+문장 뒤에 스페이스 2번  
+
+### 하이퍼링크 달기
+[URL Lable](URL)  
+### 코드 블록
+``` 백틱 3개 사이에 코드 ```
+  
+## Xcode
+### 라이브러리 패널 보는 법
+캔버스가 열려있어야 볼 수 있다...  
+
 ## SwiftUI
 ### View를 닫는 코드
-```@Environment(\.dismiss) var dismiss // 뷰 닫기```
+```@Environment(\.dismiss) var dismiss // 뷰 닫기```  
+
 ### Swipe하여 다양한 메뉴가 나오는 코드
 ```
 .swipeActions {
@@ -23,9 +37,6 @@ SwiftUI 프레임워크를 사용한 iOS 개발을 하며 배운 것을 기록
       .tint(.blue)
   }
 ```
-### 라이브러리 패널 보는 법
-캔버스가 열려있어야 볼 수 있다...
-
 
 ## Debugging
 ### Core Data 레코드 직접 보기 및 수정
@@ -38,11 +49,3 @@ AppSchema 설정에서 EditSchema를 선택하고 Arguments에 아래의 두 줄
 해당 파일을 다양한 SQLite 에디터로(db-browser-for-sqlite 등) 열어 볼 수 있다.  
 수정하고 저장하면 DB에 적용된다.  
 [참고 블로그](https://eastroot1590.tistory.com/entry/Core-Data-1)  
-
-## Mark down 작성법
-### 줄바꿈
-문장 뒤에 스페이스 2번  
-### 하이퍼링크 달기 
-[URL Lable](URL)
-### 코드 블록
-``` 백틱 3개 사이에 코드 ```
